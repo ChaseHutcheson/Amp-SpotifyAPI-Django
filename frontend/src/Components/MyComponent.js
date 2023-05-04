@@ -19,15 +19,6 @@ const MyComponent = () => {
     return (
         <div>
             <script src="https://sdk.scdn.co/spotify-player.js"></script>
-            <script>
-                window.onSpotifyWebPlaybackSDKReady = () ={'>'} {
-                const token = '[My access token]';
-                const player = new Spotify.Player({
-                    name: 'Web Playback SDK Quick Start Player',
-                    getOAuthToken: cb => { cb(token); },
-                    volume: 0.5
-                });
-            </script>
             <a href='http://127.0.0.1:8000/api/spotify-login'><button >Get Tokens</button></a>
         </div>
     );

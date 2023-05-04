@@ -8,10 +8,10 @@ import spotipy
 import os
 from dotenv import load_dotenv
 
+load_dotenv(".env")
 
 def spotify_login(request):
     print("hit")
-    load_dotenv()
     scope = ['user-library-read', 'user-read-playback-state', 'user-modify-playback-state']
     cache_path = 'cache/' + request.user.username
     sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
