@@ -9,6 +9,7 @@ djangorestframework = "*"
 django-cors-headers = "*"
 requests = "*"
 python-dotenv = "*"
+spotipy = "*"
 
 [dev-packages]
 

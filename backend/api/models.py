@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 import string
 import random
@@ -24,14 +25,8 @@ import random
 #     user_name_id = models.CharField(max_length=40, default="Null")
 
 class SpotifyToken(models.Model):
-    session_id = models.CharField(max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     access_token = models.CharField(max_length=200)
     token_type = models.CharField(max_length=20)
     expires_in = models.DateTimeField()
     refresh_token = models.CharField(max_length=200)
-    user_name = models.CharField(max_length=30, default="Null")
-    user_pfp_url = models.URLField(default="Null")
-    user_name_id = models.CharField(max_length=40, default="Null")
-
-    def __str__(self):
-        return self.session_id, self.access_token, self.token_type, self.expires_in, self.refresh_token, self.user_name, self.user_pfp_url, self.user_name_id

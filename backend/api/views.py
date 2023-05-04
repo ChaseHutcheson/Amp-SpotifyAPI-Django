@@ -99,7 +99,7 @@ def spotify_callback(request, format=None):
 class GetTokens(APIView):
     def get(self, request, format=None):
         id = request.session.session_key
-        value = SpotifyToken.objects.get(session_id = id)
+        value = SpotifyToken.objects.filter(id=1).first()
         data = serialize('json', [value,])
         data = json.loads(data)
         return JsonResponse(data, status=status.HTTP_200_OK, safe=False)
