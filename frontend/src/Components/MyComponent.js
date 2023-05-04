@@ -18,7 +18,7 @@ const MyComponent = () => {
 
     return (
         <div>
-            <a href='http://127.0.0.1:8000/api/authenticate'><button >Get Tokens</button></a>
+            <a href='http://127.0.0.1:8000/api/spotify-login'><button >Get Tokens</button></a>
         </div>
     );
 }
