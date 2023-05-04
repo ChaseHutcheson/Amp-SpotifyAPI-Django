@@ -36,7 +36,7 @@ def spotify_callback(request):
     expires_at = datetime.now() + timedelta(seconds=expires_in)
     
     # Save the tokens to the database
-    token, created = SpotifyToken.objects.get_or_create(user=request.user)
+    token, created = SpotifyToken.objects.get_or_create(user=request.user.id)
     token.access_token = access_token
     token.refresh_token = refresh_token
     token.expires_at = expires_at
