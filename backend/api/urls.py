@@ -1,10 +1,10 @@
 from django.urls import include, path
-from rest_framework import routers
-from .views import SpotifyTokenViewSet
+from .views import SpotifyTokenViewSet, AuthorizationUrl, spotify_callback, GetTokens
 
-router = routers.DefaultRouter()
-router.register(r'tokens', SpotifyTokenViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('read-tokens', SpotifyTokenViewSet.as_view({'get':'list'})),
+    path('authenticate', AuthorizationUrl.as_view()),
+    path("redirect", spotify_callback),
+    path('get-tokens', GetTokens.as_view()),
 ]

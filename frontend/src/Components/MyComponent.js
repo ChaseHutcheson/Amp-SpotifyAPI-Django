@@ -5,7 +5,7 @@ const MyComponent = () => {
     const [myData, setMyData] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/mymodel/')
+        axios.get('http://localhost:8000/api/get-tokens')
             .then(response => {
                 setMyData(response.data);
             })
@@ -16,9 +16,7 @@ const MyComponent = () => {
 
     return (
         <div>
-            {myData.map(item => (
-                <div key={item.id}>{item.name}</div>
-            ))}
+            <a href='http://127.0.0.1:8000/api/authenticate'><button >Get Tokens</button></a>
         </div>
     );
 }
