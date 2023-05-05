@@ -25,8 +25,7 @@ import random
 #     user_name_id = models.CharField(max_length=40, default="Null")
 
 class SpotifyToken(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    access_token = models.CharField(max_length=200)
-    token_type = models.CharField(max_length=20)
-    expires_in = models.DateTimeField()
-    refresh_token = models.CharField(max_length=200)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='spotify_token')
+    access_token = models.CharField(max_length=255)
+    refresh_token = models.CharField(max_length=255)
+    expires_in = models.DateTimeField(null=True)
