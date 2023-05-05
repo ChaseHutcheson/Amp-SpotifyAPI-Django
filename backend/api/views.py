@@ -14,7 +14,7 @@ load_dotenv(".env")
 def spotify_login(request):
     user = request.user
     try:
-        token = SpotifyToken.objects.get(user=user)
+        SpotifyToken.objects.get(user=user)
     except SpotifyToken.DoesNotExist:
         scope = ['user-library-read', 'user-read-playback-state', 'user-modify-playback-state']
 
