@@ -37,7 +37,7 @@ def spotify_login(request):
                                 )
         auth_url = sp_oauth.get_authorize_url()
         return HttpResponseRedirect(auth_url)
-    return HttpResponseRedirect("http://localhost:8000/api/get-tokens")
+    return HttpResponseRedirect("http://localhost:8000/api/spotify-callback")
 
 def spotify_callback(request):
     code = request.GET.get('code')
@@ -81,7 +81,7 @@ def spotify_callback(request):
 
 def get_data(request):
     user = request.user.id
-    token = SpotifyToken.objects.filter(user=user).first()
-    sp = spotipy.Spotify(auth=token.access_token)
+    access_token = SpotifyToken.objects.filter(user=user).values_list('access_token', flat=True).first()
+    sp = spotipy.Spotify(auth=str(access_token))
     data = sp.me()
     return JsonResponse(data)
