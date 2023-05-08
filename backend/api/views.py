@@ -17,7 +17,7 @@ def spotify_login(request):
     try:
         token = SpotifyToken.objects.get(user=user)
         if token.expires_in < timezone.now():
-            scope = ['user-library-read', 'user-read-playback-state', 'user-modify-playback-state']
+            scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control streaming', 'user-modify-playback-state']
             sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
                                     client_secret=os.getenv('CLIENT_SECRET'),
                                     redirect_uri=os.getenv('REDIRECT_URI'),
@@ -28,7 +28,7 @@ def spotify_login(request):
         else:
             pass
     except SpotifyToken.DoesNotExist:
-        scope = ['user-library-read', 'user-read-playback-state', 'user-modify-playback-state']
+        scope = scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control streaming', 'user-modify-playback-state']
 
         sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
                                 client_secret=os.getenv('CLIENT_SECRET'),
@@ -59,11 +59,11 @@ def spotify_callback(request):
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         if request.user.is_authenticated:
-            username = request.user.username
+            user_name = request.user.username
         else:
-            username = user_info['display_name']
+            user_name = user_info['display_name']
             password = User.objects.make_random_password()
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=user_name, email=email, password=password)
     
     if request.user.is_authenticated:
         user = request.user
@@ -77,11 +77,17 @@ def spotify_callback(request):
     if not request.user.is_authenticated:
         login(request, user)
 
-    return redirect('http://localhost:3000')
+    redirect('http://localhost:3000')
+    data = {
+        "USER_DATA": sp.me(),
+        "USER_MUSIC": sp.user_playlists(user_info['id'])
+    }
+    return JsonResponse(data)
 
 def get_data(request):
+    permission_classes = [SpotifyToken.Is]
     user = request.user.id
     access_token = SpotifyToken.objects.filter(user=user).values_list('access_token', flat=True).first()
     sp = spotipy.Spotify(auth=str(access_token))
-    data = sp.me()
+    data = sp.current_user() 
     return JsonResponse(data)

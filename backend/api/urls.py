@@ -6,5 +6,4 @@ urlpatterns = [
     # path('read-tokens', SpotifyTokenViewSet.as_view({'get':'list'})),
     path('spotify-login', spotify_login, name='spotify_login'),
     path('spotify-callback', spotify_callback, name='spotify_callback'),
-    path('get-tokens', get_data, name="get_data"),
 ]
