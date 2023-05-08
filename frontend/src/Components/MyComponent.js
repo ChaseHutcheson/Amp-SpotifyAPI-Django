@@ -4,24 +4,34 @@ import axios from 'axios';
 const MyComponent = () => {
     const [myData, setMyData] = useState([]);
 
-    useEffect(() => {
-        axios.get('http://localhost:8000/api/get-tokens')
-            .then(response => {
-                setMyData(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            
-            console.log(myData);
-    }, []);
-
-    return (
+    
+    const fetchUserData = () => {
+        fetch("http://127.0.0.1:8000/api/get-tokens")
+          .then(response => {
+            return response.json();
+          })
+          .then(data => {
+            console.log(data);
+            setMyData(data);
+          }).catch(console.error);
+      }
+    
+      useEffect(() => {
+        fetchUserData()
+      }, [])
+    
+      return (
         <div>
-            <script src="https://sdk.scdn.co/spotify-player.js"></script>
-            <a href='http://127.0.0.1:8000/api/spotify-login'><button >Get Tokens</button></a>
+          {myData.length > 0 && (
+            <ul>
+              {myData.map(user => (
+                <li key={user.id}>{user.display_name}</li>
+              ))}
+            </ul>
+          )}
         </div>
-    );
+      );
+    
 }
 
 export default MyComponent;
