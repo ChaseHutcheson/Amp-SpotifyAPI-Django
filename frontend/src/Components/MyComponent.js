@@ -40,34 +40,34 @@ const MyComponent = () => {
 
       useEffect(() => {
         fetchUserData();
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        script.async = true;
+        // const script = document.createElement("script");
+        // script.src = "https://sdk.scdn.co/spotify-player.js";
+        // script.async = true;
     
-        document.body.appendChild(script);
+        // document.body.appendChild(script);
     
-        window.onSpotifyWebPlaybackSDKReady = () => {
+        // window.onSpotifyWebPlaybackSDKReady = () => {
     
-            const player = new window.Spotify.Player({
-                name: 'Web Playback SDK',
-                getOAuthToken: cb => { cb(props.token); },
-                volume: 0.5
-            });
+        //     const player = new window.Spotify.Player({
+        //         name: 'Web Playback SDK',
+        //         getOAuthToken: cb => { cb(props.token); },
+        //         volume: 0.5
+        //     });
     
-            setPlayer(player);
+        //     setPlayer(player);
     
-            player.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-            });
+        //     player.addListener('ready', ({ device_id }) => {
+        //         console.log('Ready with Device ID', device_id);
+        //     });
     
-            player.addListener('not_ready', ({ device_id }) => {
-                console.log('Device ID has gone offline', device_id);
-            });
+        //     player.addListener('not_ready', ({ device_id }) => {
+        //         console.log('Device ID has gone offline', device_id);
+        //     });
     
     
-            player.connect();
+        //     player.connect();
     
-        };
+        // };
       }, [])
   
   
@@ -82,29 +82,7 @@ const MyComponent = () => {
                   </a>
                 </figure>
 
-                <div class="flex items-center">
-                  <nav class="lg:block hidden">
-                    <ul class="flex items-center">
-                      <li>
-                        <a class="inline-block text-white font-bold py-4 px-5 hover:text-hoverspt" href="#premium">
-                          Premium
-                        </a>
-                      </li>
-          
-                      <li>
-                        <a class="inline-block text-white font-bold py-4 px-5 hover:text-hoverspt" href="#suporte">
-                          Suporte
-                        </a>
-                      </li>
-          
-                      <li>
-                        <a class="inline-block text-white font-bold py-4 px-5 hover:text-hoverspt" href="#baixar">
-                          Baixar
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-          
+                <div class="flex items-center">        
                   <div class="flex items-center gap-3 lg:gap-0 ml-4 relative after:content-[''] after:h-4 after:w-px after:bg-white after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:hidden after:lg:block">
                     <figure class="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
                       <img class="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" src={myData.USER_DATA.images[0].url} alt="User Photo"></img>
