@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .app-container {
+    @apply w-full max-w-8xl m-auto px-4 md:px-8 lg:px-10 xl:p-0;
+  }
+
+  .button {
+    @apply inline-block rounded-full uppercase text-sm md:text-base font-bold px-8 py-3 hover:scale-105;
+  }
+}
