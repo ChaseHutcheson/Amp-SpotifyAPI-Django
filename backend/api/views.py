@@ -79,8 +79,14 @@ def spotify_callback(request):
 
     redirect('http://localhost:3000')
     data = {
-        "USER_DATA": sp.me(),
-        "USER_MUSIC": sp.user_playlists(user_info['id'])
+        "PROFILE_DATA": sp.me(),
+        "SENSETIVE": {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "expires_in": expires_in,
+            "device_id": sp.devices()
+        },
+        "PLAYLIST_SONGS":  sp.current_user_playlists()
     }
     return JsonResponse(data)
 
