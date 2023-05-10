@@ -58,12 +58,13 @@ function WebPlayback(props) {
                 await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
                     headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${props.token}`
                 }
                 }).then(response => {
                 return response.json()
                 }).then(res => {
                     console.log(res)
+                    console.log("Fuck")
                 }
                 )
             )
