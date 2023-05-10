@@ -17,7 +17,7 @@ def spotify_login(request):
     try:
         token = SpotifyToken.objects.get(user=user)
         if token.expires_in < timezone.now():
-            scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control streaming', 'user-modify-playback-state']
+            scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control', 'streaming', 'user-modify-playback-state']
             sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
                                     client_secret=os.getenv('CLIENT_SECRET'),
                                     redirect_uri=os.getenv('REDIRECT_URI'),
