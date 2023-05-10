@@ -1,61 +1,75 @@
 import React, { useState, useEffect } from 'react';
 
 function WebPlayback(props) {
+    const [token, setToken] = useState(false)
     const [player, setPlayer] = useState(undefined);
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [current_track, setTrack] = useState(undefined);
 
-
-
     useEffect(() => {
+        // const script = document.createElement("script");
+        // script.src = "https://sdk.scdn.co/spotify-player.js";
+        // script.async = true;
+    
+        // document.body.appendChild(script);
+    
+        // window.onSpotifyWebPlaybackSDKReady = async () => {
+    
+        //     const player = new window.Spotify.Player({
+        //         name: 'Web Playback SDK',
+        //         getOAuthToken: cb => { cb(props.token); },
+        //         volume: 0.5
+        //     });
+    
+        //     setPlayer(player);
+    
+        //     player.addListener('ready', ({ device_id }) => {
+        //         console.log('Ready with Device ID', device_id);
+        //     });
+    
+        //     player.addListener('not_ready', ({ device_id }) => {
+        //         console.log('Device ID has gone offline', device_id);
+        //     });
+    
+    
+        //     player.connect();
 
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        script.async = true;
-    
-        document.body.appendChild(script);
-    
-        window.onSpotifyWebPlaybackSDKReady = () => {
-    
-            const player = new window.Spotify.Player({
-                name: 'Web Playback SDK',
-                getOAuthToken: cb => { cb(props.token); },
-                volume: 0.5
-            });
-    
-            setPlayer(player);
-    
-            player.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-            });
-    
-            player.addListener('not_ready', ({ device_id }) => {
-                console.log('Device ID has gone offline', device_id);
-            });
-    
-    
-            player.connect();
+        //     player.addListener('player_state_changed', ( state => {
 
-            player.addListener('player_state_changed', ( state => {
-
-                if (!state) {
-                    return;
+        //         if (!state) {
+        //             return;
+        //         }
+            
+        //         setTrack(state.track_window.current_track);
+        //         setPaused(state.paused);
+            
+            
+        //         player.getCurrentState().then( state => { 
+        //             (!state)? setActive(false) : setActive(true) 
+        //         });
+            
+        //     }));
+            
+    
+        // };
+        const fetchUserData = async () => {
+            const UserPlaylists = await (
+                await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
-            
-                setTrack(state.track_window.current_track);
-                setPaused(state.paused);
-            
-            
-                player.getCurrentState().then( state => { 
-                    (!state)? setActive(false) : setActive(true) 
-                });
-            
-            }));
-            
-    
-        };
-    }, []);
+                }).then(response => {
+                return response.json()
+                }).then(res => {
+                    console.log(res)
+                }
+                )
+            )
+          };
+          fetchUserData()
+    }, [token]);
 
     return (
         <>
