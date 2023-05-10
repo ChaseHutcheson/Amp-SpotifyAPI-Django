@@ -4,9 +4,10 @@ import Logo from './assets/imgs/spotify_logo.png'
 import SpotifyPlayer from 'react-spotify-web-playback';
 import WebPlayback from './Playback';
 
-const MyComponent = () => {
+const HomePage = () => {
     const [myData, setMyData] = useState([]);
-    const [dataRetreieved, setDataRetrieved] = useState(false)
+    const [playlistData, setPlaylistData] = useState([]);
+    const [dataRetreieved, setDataRetrieved] = useState(false);
     const [token, setToken] = useState(null);
     const [player, setPlayer] = useState(undefined);
     const [is_paused, setPaused] = useState(false);
@@ -34,8 +35,7 @@ const MyComponent = () => {
             'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken') //getCookie function retrieves the CSRF token from the cookie
           }
-        })
-          .then(response => {
+        }).then(response => {
             return response.json();
           })
           .then(res => {
@@ -47,11 +47,28 @@ const MyComponent = () => {
           }).catch(console.error);;
       }
 
+      const fetchUserPlaylists = () => {
+      
+        fetch(myData.PLAYLIST_SONGS?.items.tracks.href, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer" + token
+          }
+        }).then(response => {
+          return response.json()
+        }).then(res => {
+          setPlaylistData(res)
+          console.log(res)
+        })
+      }
+
       useEffect(() => {
         fetchUserData()
         setToken(myData.SENSETIVE?.access_token)
         console.log(myData)
         console.log(token)
+        fetchUserPlaylists()
+        console.log(playlistData)
       }, [])
   
       return (
@@ -96,10 +113,10 @@ const MyComponent = () => {
                   <h1 class="text-3xl mt-20 font-bold md:text-6xl">Is it music you want?</h1>
                   <h2 class="font-medium mt-7 md:mt-11 mb-8 md:mb-11 md:text-2xl">Listen to the best releases of the moment.</h2>
                   <div>
-                    <WebPlayback token={null}/>
+                    <WebPlayback token={token}/>
                   </div>
                   <ul>
-                    {}
+                    
                   </ul>
                 </div>
               </div>
@@ -120,4 +137,4 @@ const MyComponent = () => {
     
 }
 
-export default MyComponent;
+export default HomePage;

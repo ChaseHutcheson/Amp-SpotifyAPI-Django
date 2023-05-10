@@ -4,7 +4,7 @@ function WebPlayback(props) {
     const [player, setPlayer] = useState(undefined);
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
-    const [current_track, setTrack] = useState(track);
+    const [current_track, setTrack] = useState(undefined);
 
 
 
@@ -61,16 +61,16 @@ function WebPlayback(props) {
         <>
             <div className="container">
                 <div className="main-wrapper">
-                    <img src={current_track.album.images[0].url} 
+                    <img src={current_track?.album.images[0].url} 
                          className="now-playing__cover" alt="" />
     
                     <div className="now-playing__side">
                         <div className="now-playing__name">{
-                                      current_track.name
+                                      current_track?.name
                                       }</div>
     
                         <div className="now-playing__artist">{
-                                      current_track.artists[0].name
+                                      current_track?.artists[0].name
                                       }</div>
 
                         <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
