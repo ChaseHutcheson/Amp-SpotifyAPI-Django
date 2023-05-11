@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import "./assets/css/spotify.css"
 
 const track = {
     name: "",
@@ -77,7 +78,6 @@ function WebPlayback(props) {
             },
             body: JSON.stringify({
                 device_ids: [`${deviceId}`],
-                play: true
             })
         };
         fetch('https://api.spotify.com/v1/me/player', requestOptions)
@@ -88,7 +88,7 @@ function WebPlayback(props) {
     if (!is_active) { 
         return (
             <>
-                <div className="container">
+                <div className="container mx-auto">
                     <div className="main-wrapper">
                         <b> Instance not active. Transfer your playback using your Spotify app </b>
                     </div>
@@ -97,14 +97,14 @@ function WebPlayback(props) {
     } else {
         return (
             <>
-                <div className="container">
+                <div className="container mx-auto">
                     <div className="main-wrapper">
 
-                        <img src={current_track.album?.images[0].url} className="now-playing__cover" alt="" />
+                        <img src={current_track?.album.images[0].url} className="now-playing__cover" alt="Image Not Found. Try Clicking Play"/>
 
                         <div className="now-playing__side">
-                            <div className="now-playing__name">{current_track.name}</div>
-                            <div className="now-playing__artist">{current_track.artists[0].name}</div>
+                            <div className="now-playing__name">{current_track?.name}</div>
+                            <div className="now-playing__artist">{current_track?.artists[0].name}</div>
 
                             <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
                                 &lt;&lt;
