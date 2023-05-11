@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Slider from "react-smooth-range-input"
 import "./assets/css/spotify.css"
 
 const track = {
@@ -14,7 +15,7 @@ const track = {
 }
 
 function WebPlayback(props) {
-
+    const [myData, setMyData] = useState([])
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
@@ -68,6 +69,9 @@ function WebPlayback(props) {
             player.connect();
 
         };
+
+        setMyData(props.data)
+
     }, []);
 
     useEffect(() => {
@@ -93,6 +97,42 @@ function WebPlayback(props) {
         });
     };
 
+    const playUserPlaylists = (playlist) => {
+        return () => {
+            if (!is_active) {
+                return;
+            } else {
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${props.token}`
+                    },
+                    body: JSON.stringify({
+                        context_uri: myData.PLAYLIST_SONGS?.items[playlist].uri,
+                        offset: {
+                            position: 5
+                        },
+                        position_ms: 0
+                    })
+                };
+                fetch('https://api.spotify.com/v1/me/player/play', requestOptions)
+
+                
+            }
+        };
+    }
+    
+    const timeStamp = (ms) => {
+        const seconds = Math.floor(ms/1000);
+        const minutes = Math.floor(seconds/60);
+        if (seconds % 60 <= 9){
+            return (`${minutes % 60}:0${seconds % 60}`)            
+        } else {
+            return (`${minutes % 60}:${seconds % 60}`)   
+        }
+
+    }
 
     if (!is_active) { 
         return (
@@ -127,8 +167,29 @@ function WebPlayback(props) {
                                 &gt;&gt;
                             </button>
 
-                            <input type="range" min="0" max="100" step="1" value={position / current_track?.duration_ms * 100} className="progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)} />
+                            <input type="range" min="0" max="100" value={position / current_track?.duration_ms * 100} className="progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)}/>
+                            <div>{timeStamp(position)}</div>
 
+                        </div>
+                        <div>
+                            <table className='mx-auto my-auto'>
+                                <thead>
+                                    <tr className=''>
+                                        <th>Playlists</th>
+                                        <th>Owner</th>
+                                        <th>Listen?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {myData.PLAYLIST_SONGS?.items.map((key, i) => (
+                                        <tr>
+                                            <td>{key.name}</td>
+                                            <td>{key.owner.display_name}</td>
+                                            <td><button onClick={playUserPlaylists(i)}>PLAY</button></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

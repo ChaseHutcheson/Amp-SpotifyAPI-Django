@@ -77,7 +77,7 @@ const HomePage = () => {
               <h1 className="text-3xl mt-20 font-bold md:text-6xl">Is it music you want?</h1>
               <h2 className="font-medium mt-7 md:mt-11 mb-8 md:mb-11 md:text-2xl">Listen to the best releases of the moment.</h2>
               <div>
-              { (token === '') ? <Login/> : <WebPlayback token={token}/> }
+              { (token === '') ? <Login/> : <WebPlayback token={token} data={myData}/> }
               </div>
               <ul>
                 
