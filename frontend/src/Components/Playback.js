@@ -19,7 +19,8 @@ function WebPlayback(props) {
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
     const [current_track, setTrack] = useState(track);
-    const [deviceId, setDeviceId] = useState(undefined)
+    const [deviceId, setDeviceId] = useState(undefined);
+    const [position, setPosition] = useState(0);
 
     useEffect(() => {
 
@@ -56,7 +57,8 @@ function WebPlayback(props) {
 
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
-
+                setPosition(state.position);
+                
                 player.getCurrentState().then( state => { 
                     (!state)? setActive(false) : setActive(true) 
                 });
@@ -82,8 +84,15 @@ function WebPlayback(props) {
         };
         fetch('https://api.spotify.com/v1/me/player', requestOptions)
     
-    // empty dependency array means this effect wi ll only run once (like componentDidMount in classes)
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
     }, [deviceId]);
+
+    const handlePositionChange = (value) => {
+        player.seek(value).then(() => {
+            setPosition(value);
+        });
+    };
+
 
     if (!is_active) { 
         return (
@@ -117,6 +126,9 @@ function WebPlayback(props) {
                             <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
                                 &gt;&gt;
                             </button>
+
+                            <input type="range" min="0" max="100" step="1" value={position / current_track?.duration_ms * 100} className="progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)} />
+
                         </div>
                     </div>
                 </div>

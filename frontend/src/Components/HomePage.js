@@ -6,9 +6,6 @@ const HomePage = () => {
   const [myData, setMyData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
   const [token, setToken] = useState('');
-  const [player, setPlayer] = useState(undefined);
-  const [is_paused, setPaused] = useState(false);
-  const [is_active, setActive] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -20,27 +17,24 @@ const HomePage = () => {
     fetchUserData();
   }, [])
 
-  // useEffect(() => {
-  //   const fetchUserPlaylists = async () => {
-  //     const UserPlaylists = await (
-  //       await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Authorization': `Bearer ${token}`
-  //         }
-  //       }).then(response => {
-  //         return response.json()
-  //       })
-  //     )
-  //     setPlaylistData(UserPlaylists)
-  //   }
+  const fetchUserPlaylists = async () => {
+    const UserPlaylists = await (
+      await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }).then(response => {
+        return response.json()
+      })
+    )
+    setPlaylistData(UserPlaylists)
+  }
 
-  //   fetchUserPlaylists()
-  // }, [token])
+  const pfpUrl = String(myData.PROFILE_DATA?.images[0].url)  
+  const display_name = String(myData.PROFILE_DATA?.display_name)
+  console.log(playlistData)
 
-  console.log(myData)
-  const pfpUrl = myData.PROFILE_DATA?.images[0].url
-  
   return (
     <div>
       <header className="bg-black py-3">
@@ -55,8 +49,8 @@ const HomePage = () => {
             <div className="flex items-center">        
               <div className="flex items-center gap-3 lg:gap-0 ml-4 relative">
                 <figure className="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
-                  <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" href={pfpUrl} alt="User Photo"></img>
-                  <span className="font-bold hidden lg:block"></span>
+                  <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" src={pfpUrl} alt="PFP"></img>
+                  <span className="font-bold block">{display_name}</span>
                   <i className="bi bi-chevron-down text-xs hidden lg:block"></i>
                   <button><i className="bi bi-list text-white text-2xl block lg:hidden"></i></button>
                 </figure>
@@ -83,7 +77,7 @@ const HomePage = () => {
               <h1 className="text-3xl mt-20 font-bold md:text-6xl">Is it music you want?</h1>
               <h2 className="font-medium mt-7 md:mt-11 mb-8 md:mb-11 md:text-2xl">Listen to the best releases of the moment.</h2>
               <div>
-              { (token === '') ? <Login/> : <WebPlayback token={token} device_id={myData.SENSETIVE?.device_id.devices[0].id}/> }
+              { (token === '') ? <Login/> : <WebPlayback token={token}/> }
               </div>
               <ul>
                 
