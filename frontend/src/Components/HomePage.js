@@ -1,52 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Logo from './assets/imgs/spotify_logo.png'
-import SpotifyPlayer from 'react-spotify-web-playback';
 import WebPlayback from './Playback';
+import Login from './Login';
 
 const HomePage = () => {
   const [myData, setMyData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState('');
   const [player, setPlayer] = useState(undefined);
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const UserData = await (
-        await fetch("http://127.0.0.1:8000/api/spotify-callback"
-        ).then(response => {
-          return response.json();
-        }).then(response => {
-          setToken(response.SENSETIVE.access_token)
-        })
-      )
-      setMyData(UserData)
-    };
-
-    fetchUserData()
+      const UserData =  await fetch("http://127.0.0.1:8000/api/spotify-callback")
+      const json = await UserData.json();
+      setMyData(json)
+      setToken(json.SENSETIVE.access_token)
+    }
+    fetchUserData();
   }, [])
 
-  useEffect(() => {
-    const fetchUserPlaylists = async () => {
-      const UserPlaylists = await (
-        await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        }).then(response => {
-          return response.json()
-        })
-      )
-      setPlaylistData(UserPlaylists)
-    }
+  // useEffect(() => {
+  //   const fetchUserPlaylists = async () => {
+  //     const UserPlaylists = await (
+  //       await fetch('https://api.spotify.com/v1/playlists/3I0r3nEZzs8bRDo9lRlReL/tracks', {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Authorization': `Bearer ${token}`
+  //         }
+  //       }).then(response => {
+  //         return response.json()
+  //       })
+  //     )
+  //     setPlaylistData(UserPlaylists)
+  //   }
 
-    if (token) {
-      fetchUserPlaylists()
-    }
-  }, [token])
+  //   fetchUserPlaylists()
+  // }, [token])
+  console.log(myData)
+  console.log(myData.PROFILE_DATA?.images[0].url)
   
   return (
     <div>
@@ -62,7 +54,7 @@ const HomePage = () => {
             <div class="flex items-center">        
               <div class="flex items-center gap-3 lg:gap-0 ml-4 relative">
                 <figure class="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
-                  <img class="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" alt="User Photo"></img>
+                  <img class="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" href={myData.PROFILE_DATA?.images[0].url} alt="User Photo"></img>
                   <span class="font-bold hidden lg:block"></span>
                   <i class="bi bi-chevron-down text-xs hidden lg:block"></i>
                   <button><i class="bi bi-list text-white text-2xl block lg:hidden"></i></button>
@@ -90,7 +82,7 @@ const HomePage = () => {
               <h1 class="text-3xl mt-20 font-bold md:text-6xl">Is it music you want?</h1>
               <h2 class="font-medium mt-7 md:mt-11 mb-8 md:mb-11 md:text-2xl">Listen to the best releases of the moment.</h2>
               <div>
-                <WebPlayback token={token}/>
+              { (token === '') ? <Login/> : <WebPlayback token={token} device_id={myData.SENSETIVE?.device_id.devices[0].id}/> }
               </div>
               <ul>
                 
