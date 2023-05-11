@@ -91,16 +91,6 @@ const HomePage = () => {
           </div>
         </section>
       </main>
-
-      <footer class="bg-black fixed inset-x-0 bottom-0 py-20">
-        <div class="app-container">
-          <div class="text-white text-center">
-            <div>
-              <h4>Super cool epic footer</h4>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
     
