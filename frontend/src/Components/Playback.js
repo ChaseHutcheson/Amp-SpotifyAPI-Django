@@ -137,7 +137,7 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="container mx-auto">
-                    <div className="main-wrapper">
+                    <div className="main-wrapper pb-20">
                         <b> Instance not active. Transfer your playback using your Spotify app </b>
                     </div>
                 </div>
@@ -155,7 +155,7 @@ function WebPlayback(props) {
                             <div className="now-playing__artist">{current_track?.artists[0].name}</div>
 
                             <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
-                                &lt;&lt;
+                                &lt;
                             </button>
 
                             <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
@@ -163,28 +163,27 @@ function WebPlayback(props) {
                             </button>
 
                             <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
-                                &gt;&gt;
+                                &gt;
                             </button>
 
-                            <input type="range" min="0" max="100" value={position / current_track?.duration_ms * 100} className="progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)}/>
-                            <div>{timeStamp(position)}</div>
+                            <input type="range" min="0" max="100" value={position / current_track?.duration_ms * 100} className="ml-5 progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)}/>
+                            <div className=' ml-64'>{timeStamp(position)}</div>
 
                         </div>
                         <div>
                             <table className='mx-auto my-auto'>
                                 <thead>
                                     <tr className=''>
-                                        <th>Playlists</th>
-                                        <th>Owner</th>
-                                        <th>Listen?</th>
+                                        <th className='text-left font-semibold border-b-2 border-r-2'>Playlists</th>
+                                        <th className='text-left font-semibold border-b-2 pl-1'>Owner</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {myData.PLAYLIST_SONGS?.items.map((key, i) => (
-                                        <tr>
-                                            <td>{key.name}</td>
-                                            <td>{key.owner.display_name}</td>
-                                            <td><button onClick={playUserPlaylists(i)}>PLAY</button></td>
+                                        <tr key={i}>
+                                            <td className='text-left border-r-2 pr-2'>{key.name}</td>
+                                            <td className='text-left pl-1'>{key.owner.display_name}</td>
+                                            <td><button className='mb-2 ml-2 shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-1 px-2 rounded' onClick={playUserPlaylists(i)}>PLAY</button></td>
                                         </tr>
                                     ))}
                                 </tbody>

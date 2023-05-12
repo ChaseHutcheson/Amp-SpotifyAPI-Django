@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from .models import SpotifyToken
 from datetime import datetime, timedelta
 import spotipy
+import json
 import os
 from dotenv import load_dotenv
 
@@ -77,7 +78,10 @@ def spotify_callback(request):
     if not request.user.is_authenticated:
         login(request, user)
 
-    redirect('http://localhost:3000')
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        
     data = {
         "PROFILE_DATA": sp.me(),
         "SENSETIVE": {

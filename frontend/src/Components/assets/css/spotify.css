@@ -46,16 +46,17 @@
   .now-playing__side {
     margin-left: 2%;
     width: 45%;
+    white-space: nowrap;
   }
   
   .btn-spotify {
-    background-color:#44c767;
-    border-radius:28px;
-    border:1px solid #18ab29;
-    display:inline-block;
+    position: relative;
+    background-color:#ef4444;
+    border-radius: 0.90rem;
     cursor:pointer;
     color:#ffffff;
     font-family:Arial;
+    font-weight: bold;
     font-size:17px;
     padding:16px 31px;
     text-decoration:none;
@@ -63,7 +64,7 @@
   }
   .btn-spotify:active {
     position:relative;
-    top:1px;
+    background-color: #f87171;
   }
   
   img { background: transparent; }

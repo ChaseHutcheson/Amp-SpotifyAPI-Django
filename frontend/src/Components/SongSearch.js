@@ -54,26 +54,31 @@ function SearchSongs(props) {
   
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Search songs..." value={searchTerm} onChange={handleChange} />
-        <button type="submit">Search</button>
+    <div className='mx-auto'>
+      <form onSubmit={handleSubmit} className='mb-6'>
+        <input className='bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text"' type="text" placeholder="Search songs..." value={searchTerm} onChange={handleChange} />
+        <button className='shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded' type="submit">Search</button>
       </form>
-      <table>
+      <h1 className='text-xl font-bold mb-2'>Search Results</h1>
+      <table className='mx-auto mb-10 w-4/6' title='Search Results'>
         <thead>
-            <td>Song</td>
-            <td>Artist</td>
-            <td>Album</td>
+          <tr>
+            <th className='text-left font-semibold border-b-2 border-r-2'>Songs</th>
+            <th className='text-left font-semibold border-b-2 border-r-2'>Artist</th>
+            <th className='text-left font-semibold border-b-2'>Album</th>
+          </tr>
         </thead>
         <tbody>
           {
             searchResults.length > 0 &&
             searchResults.map((result, i) => (
-              <tr key={i}>
-                <td>{result.name}</td>
-                <td>{result.artists[0].name}</td>
-                <td>{result.album.name} <button onClick={() => playSong(result.uri)}>PLAY</button></td>
+              <tr key={result.id}>
+                <td className='text-left border-b-2'>{result.name}</td>
+                <td className='text-left border-b-2'>{result.artists[0].name}</td>
+                <td className='text-left border-b-2'>{result.album.name}</td>
+                <td><button className='mb-2 shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-1 px-2 rounded' onClick={() => playSong(result.uri)}>PLAY</button></td>
               </tr>
+              
             ))
           }
         </tbody>
