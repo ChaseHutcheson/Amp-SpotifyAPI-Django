@@ -7,6 +7,7 @@ const HomePage = () => {
   const [myData, setMyData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
   const [token, setToken] = useState('');
+  const [log, setLog] = useState(false)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -16,23 +17,21 @@ const HomePage = () => {
       setToken(json.SENSETIVE.access_token)
     }
     fetchUserData();
-  }, [])
+  }, [log])
 
   const logOut = () => {
-    console.log('LOG_OUT STARTED')
-    fetch('http://127.0.0.1:8000/api/spotify-callback', {
+    const data = token;
+
+    fetch('http://127.0.0.1:8000/api/spotify-logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ 
-        data: 'LOG_OUT'
-      })
+      body: JSON.stringify(data)
     })
-    .then(response => console.log(response))
     .then(response => response.json())
     .then(data => console.log(data))
-    .catch(error => console.error(error))
+    .catch(error => console.error(error));
   }
 
 

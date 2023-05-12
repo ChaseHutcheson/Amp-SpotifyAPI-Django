@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
@@ -13,34 +14,11 @@ from dotenv import load_dotenv
 
 load_dotenv(".env")
 
-def spotify_login(request):
-    user = request.user.id
-    try:
-        token = SpotifyToken.objects.get(user=user)
-        if token.expires_in < timezone.now():
-            scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control', 'streaming', 'user-modify-playback-state']
-            sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
-                                    client_secret=os.getenv('CLIENT_SECRET'),
-                                    redirect_uri=os.getenv('REDIRECT_URI'),
-                                    scope=scope,
-                                    )
-            auth_url = sp_oauth.get_authorize_url()
-            return HttpResponseRedirect(auth_url)
-        else:
-            pass
-    except SpotifyToken.DoesNotExist:
-        scope = scope = ['ugc-image-upload', 'user-follow-modify', 'playlist-modify-private', 'playlist-modify-public', 'user-library-modify', 'playlist-read-collaborative', 'user-read-currently-playing', 'user-follow-read', 'user-read-playback-position', 'user-read-playback-state', 'playlist-read-private', 'user-read-recently-played', 'user-top-read', 'user-read-email', 'user-library-read user-read-private', 'app-remote-control streaming', 'user-modify-playback-state']
+def spotifyCallback(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
 
-        sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
-                                client_secret=os.getenv('CLIENT_SECRET'),
-                                redirect_uri=os.getenv('REDIRECT_URI'),
-                                scope=scope,
-                                )
-        auth_url = sp_oauth.get_authorize_url()
-        return HttpResponseRedirect(auth_url)
-    return HttpResponseRedirect("http://localhost:8000/api/spotify-callback")
-
-def spotify_callback(request):
     code = request.GET.get('code')
     sp_oauth = spotipy.SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
                             client_secret=os.getenv('CLIENT_SECRET'),
@@ -78,10 +56,6 @@ def spotify_callback(request):
     if not request.user.is_authenticated:
         login(request, user)
 
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        print(data)
-        
     data = {
         "PROFILE_DATA": sp.me(),
         "SENSETIVE": {
@@ -94,10 +68,11 @@ def spotify_callback(request):
     }
     return JsonResponse(data)
 
-def get_data(request):
-    permission_classes = [SpotifyToken.Is]
-    user = request.user.id
-    access_token = SpotifyToken.objects.filter(user=user).values_list('access_token', flat=True).first()
-    sp = spotipy.Spotify(auth=str(access_token))
-    data = sp.current_user() 
-    return JsonResponse(data)
+@csrf_exempt
+def logOut(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data) # should output {'foo': 'bar', 'baz': 'qux'}
+        return JsonResponse({'message': 'Data received'})
+    else:
+        return JsonResponse({'message': 'Invalid request method'})
