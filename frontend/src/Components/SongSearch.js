@@ -24,6 +24,35 @@ function SearchSongs(props) {
     }
   };
 
+  const playSong = async (songURI) => {
+    try {
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${props.access_token}`
+        },
+        body: JSON.stringify({
+          uris: [
+            songURI
+          ],
+        })
+      };
+  
+      const response = await fetch('https://api.spotify.com/v1/me/player/play', requestOptions);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error ${response.status}: ${errorData.error.message}`);
+      }
+  
+      console.log('Song started playing:', songURI);
+    } catch (error) {
+      console.error('Error playing song:', error);
+    }
+  };
+  
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -37,13 +66,16 @@ function SearchSongs(props) {
             <td>Album</td>
         </thead>
         <tbody>
-                {searchResults.map((result) => {
-                    <tr key={result.id}>
-                        <td>{result.name}</td>
-                        <td>{result.artists[0].name}</td>
-                        <td>{result.album}</td>
-                    </tr>
-                })}
+          {
+            searchResults.length > 0 &&
+            searchResults.map((result, i) => (
+              <tr key={i}>
+                <td>{result.name}</td>
+                <td>{result.artists[0].name}</td>
+                <td>{result.album.name} <button onClick={() => playSong(result.uri)}>PLAY</button></td>
+              </tr>
+            ))
+          }
         </tbody>
       </table>
       {/* {searchResults.length > 0 && (
