@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Slider from "react-smooth-range-input"
 import "./assets/css/spotify.css"
 
 const track = {

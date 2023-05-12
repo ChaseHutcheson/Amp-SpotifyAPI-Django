@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WebPlayback from './Playback';
 import Login from './Login';
+import SearchSongs from './SongSearch';
 
 const HomePage = () => {
   const [myData, setMyData] = useState([]);
@@ -78,6 +79,7 @@ const HomePage = () => {
               <h2 className="font-medium mt-7 md:mt-11 mb-8 md:mb-11 md:text-2xl">Listen to the best releases of the moment.</h2>
               <div>
               { (token === '') ? <Login/> : <WebPlayback token={token} data={myData}/> }
+              <SearchSongs access_token={token} />
               </div>
               <ul>
                 
