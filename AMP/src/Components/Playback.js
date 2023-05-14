@@ -14,7 +14,7 @@ const track = {
 }
 
 function WebPlayback(props) {
-    const [myData, setMyData] = useState([])
+    const [playlists, setPlaylists] = useState([])
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
@@ -69,8 +69,6 @@ function WebPlayback(props) {
 
         };
 
-        setMyData(props.data)
-
     }, []);
 
     useEffect(() => {
@@ -90,6 +88,18 @@ function WebPlayback(props) {
     // empty dependency array means this effect will only run once (like componentDidMount in classes)
     }, [deviceId]);
 
+    useEffect(() => {
+        const fetchUserPlaylists = async () => {
+          const result = await fetch("https://api.spotify.com/v1/me/playlists", {
+            method: "GET",
+            headers: { Authorization: `Bearer ${props.token}` },
+          });
+          const json = await result.json();
+          setPlaylists(json);
+        };
+        fetchUserPlaylists();
+      }, []);
+
     const handlePositionChange = (value) => {
         player.seek(value).then(() => {
             setPosition(value);
@@ -108,7 +118,7 @@ function WebPlayback(props) {
                         'Authorization': `Bearer ${props.token}`
                     },
                     body: JSON.stringify({
-                        context_uri: myData.PLAYLIST_SONGS?.items[playlist].uri,
+                        context_uri: playlists?.items[playlist].uri,
                         offset: {
                             position: 5
                         },
@@ -145,7 +155,7 @@ function WebPlayback(props) {
     } else {
         return (
             <>
-                <div className="container mx-auto">
+                <div className="flex justify-between">
                     <div className="main-wrapper">
 
                         <img src={current_track?.album.images[0].url} className="now-playing__cover" alt="Image Not Found. Try Clicking Play"/>
@@ -166,8 +176,10 @@ function WebPlayback(props) {
                                 &gt;
                             </button>
 
-                            <input type="range" min="0" max="100" value={position / current_track?.duration_ms * 100} className="ml-5 progress-bar" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)}/>
-                            <div className=' ml-64'>{timeStamp(position)}</div>
+                            <div className='flex flex-col items-center'>
+                                <input type="range" min="0" max="100" value={position / current_track?.duration_ms * 100} className="mt-3 w-60" onChange={(e) => handlePositionChange(e.target.value / 100 * current_track.duration_ms)}/>
+                                <div className=''>{timeStamp(position)}</div>
+                            </div>
 
                         </div>
                         <div>
@@ -179,7 +191,7 @@ function WebPlayback(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {myData.PLAYLIST_SONGS?.items.map((key, i) => (
+                                    {playlists?.items.map((key, i) => (
                                         <tr key={i}>
                                             <td className='text-left border-r-2 pr-2'>{key.name}</td>
                                             <td className='text-left pl-1'>{key.owner.display_name}</td>

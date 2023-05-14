@@ -4,8 +4,17 @@ import Login from './Login';
 import SearchSongs from './SongSearch';
 
 const HomePage = () => {
-  const [myData, setMyData] = useState([]);
+  const [myData, setMyData] = useState({});
   const [token, setToken] = useState('');
+
+  const fetchUserData = async (key) => {
+    const result = await fetch("https://api.spotify.com/v1/me", {
+      method: "GET", headers: { Authorization: `Bearer ${key}` }
+    })
+    const json = await result.json();
+    console.log(json);
+    setMyData(json);
+  }
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -14,17 +23,14 @@ const HomePage = () => {
       console.log(json)
       setToken(json.access_token);
     }
-
-    // const fetchUserData = () => {
-    //   const result = fetch("https://api.spotify.com/v1/me", {
-    //     method: "GET", headers: { Authorization: `Bearer ${token}` }
-    //   })
-    //   const json = result.json();
-    //   setMyData(json);
-    // }
     fetchToken();
   }, [])
 
+  useEffect(() => {
+    if (token) {
+      fetchUserData(token);
+    }
+  }, [token])
 
 
   return (
@@ -39,13 +45,12 @@ const HomePage = () => {
 
             <div className="flex items-center">        
               <div className="flex items-center gap-3 lg:gap-0 ml-4 relative">
-                <figure className="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
-                  <button>
-                    <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" alt="PFP"></img>
-                    <span className="font-bold block">Fuck</span>
-                  </button>
-                  
-                </figure>
+              <figure className="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
+                <button>
+                  {myData && myData.images && myData.images.length > 0 && <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" src={myData.images[0].url} alt="PFP"></img>}
+                  {myData && <span className="font-bold block">{myData.display_name}</span>}
+                </button>
+              </figure>
               </div>
             </div>
           </div>
