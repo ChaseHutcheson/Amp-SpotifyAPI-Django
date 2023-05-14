@@ -31,6 +31,7 @@ const HomePage = () => {
     })
     .then(response => response.json())
     .then(data => console.log(data))
+    .then(setLog(!log))
     .catch(error => console.error(error));
   }
 
