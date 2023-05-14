@@ -5,40 +5,27 @@ import SearchSongs from './SongSearch';
 
 const HomePage = () => {
   const [myData, setMyData] = useState([]);
-  const [playlistData, setPlaylistData] = useState([]);
   const [token, setToken] = useState('');
-  const [log, setLog] = useState(false)
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const UserData =  await fetch("http://127.0.0.1:8000/api/spotify-callback")
-      const json = await UserData.json();
-      setMyData(json)
-      setToken(json.SENSETIVE.access_token)
+    const fetchToken = async () => {
+      const response = await fetch('/auth/token');
+      const json = await response.json();
+      console.log(json)
+      setToken(json.access_token);
     }
-    fetchUserData();
-  }, [log])
 
-  const logOut = () => {
-    const data = token;
-
-    fetch('http://127.0.0.1:8000/api/spotify-logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .then(setLog(!log))
-    .catch(error => console.error(error));
-  }
+    // const fetchUserData = () => {
+    //   const result = fetch("https://api.spotify.com/v1/me", {
+    //     method: "GET", headers: { Authorization: `Bearer ${token}` }
+    //   })
+    //   const json = result.json();
+    //   setMyData(json);
+    // }
+    fetchToken();
+  }, [])
 
 
-  const pfpUrl = String(myData.PROFILE_DATA?.images[0].url)  
-  const display_name = String(myData.PROFILE_DATA?.display_name)
-  console.log(playlistData)
 
   return (
     <div>
@@ -53,9 +40,9 @@ const HomePage = () => {
             <div className="flex items-center">        
               <div className="flex items-center gap-3 lg:gap-0 ml-4 relative">
                 <figure className="ml-8 cursor-pointer flex items-center gap-3 hover:text-hoverspt">
-                  <button onClick={() => logOut()}>
-                    <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" src={pfpUrl} alt="PFP"></img>
-                    <span className="font-bold block">{display_name}</span>
+                  <button>
+                    <img className="inline-block h-8 w-8 lg:h-11 lg:w-11 rounded-full" alt="PFP"></img>
+                    <span className="font-bold block">Fuck</span>
                   </button>
                   
                 </figure>
